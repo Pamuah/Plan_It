@@ -8,7 +8,7 @@ const CustomInput = ({
   onChange,
   label,
   Value,
-  icon, // pass an icon definition from Font Awesome
+  icon,
 }) => {
   return (
     <div>
