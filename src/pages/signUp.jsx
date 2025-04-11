@@ -8,6 +8,7 @@ import {
   faPhone,
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
+import { sendControlData } from "../Api_Services/services";
 
 const SignUp = () => {
   const [firstname, setFirstName] = useState("");
@@ -17,6 +18,45 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
+
+  const handle_Submit = async () => {
+    console.log("clicked");
+    // if (password !== confirmPassword) {
+    //   alert("Passwords do not match");
+    //   return false;
+    // } else if (
+    //   firstname === "" ||
+    //   lastname === "" ||
+    //   email === "" ||
+    //   password === "" ||
+    //   confirmPassword === "" ||
+    //   phone === "" ||
+    //   username === ""
+    // ) {
+    //   alert("All fields are required");
+    //   return false;
+    // }
+
+    const data = {
+      firstname,
+      lastname,
+      email,
+      password,
+      confirmPassword,
+      phone,
+      username,
+    };
+    console.log("payload being sent", JSON.stringify(data));
+    try {
+      const response = await sendControlData(data, "/users/register/");
+      console.log("Server Response:", response);
+
+      alert("registered successfully");
+    } catch (error) {
+      console.error("Registreation failed!!", error);
+      alert("Registreation failed!!");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen w-screen bg-background">
@@ -142,7 +182,9 @@ const SignUp = () => {
 
           <CustomButton
             title="Register"
-            onPress={() => {}}
+            onPress={() => {
+              handle_Submit();
+            }}
             className="h-8 w-full text-sm my-4 text-semibold rounded-sm py-1"
           />
 
