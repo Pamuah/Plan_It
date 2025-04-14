@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import "./SignIn.css";
+import CustomInput from "./CustomInput.jsx";
+import CustomButton from "./CustomButton.jsx";
+import { faUser, faLock, faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -26,29 +29,31 @@ const SignIn = () => {
       <h2>Sign In</h2>
       <form onSubmit={handleSubmit} className="signin-form">
         {error && <p className="error">{error}</p>}
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-          />
-        </div>
-        <button type="submit" className="signin-button">
-          Sign In
-        </button>
+        <CustomInput
+          label="Email"
+          placeholder="Enter your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          icon={faUser}
+          width="w-full"
+          height="h-10"
+          type="email" // Added for email input
+        />
+        <CustomInput
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          icon={faLock}
+          width="w-full"
+          height="h-10"
+          type="password" // Added for password input
+        />
+        <CustomButton
+          title="Sign In"
+          trailingIcon={faSignInAlt}
+          type="submit" // For form submission
+        />
       </form>
       <p>
         Don't have an account? <a href="/signup">Sign up</a>
