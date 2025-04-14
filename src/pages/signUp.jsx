@@ -11,12 +11,12 @@ import {
 import { sendControlData } from "../Api_Services/services";
 
 const SignUp = () => {
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
+  const [first_name, setFirstName] = useState("");
+  const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [phone, setPhone] = useState("");
+  const [confirm_password, setConfirmPassword] = useState("");
+  const [phone_number, setPhone] = useState("");
   const [username, setUsername] = useState("");
 
   const handle_Submit = async () => {
@@ -38,12 +38,12 @@ const SignUp = () => {
     // }
 
     const data = {
-      firstname,
-      lastname,
+      first_name,
+      last_name,
       email,
       password,
-      confirmPassword,
-      phone,
+      confirm_password,
+      phone_number,
       username,
     };
     console.log("payload being sent", JSON.stringify(data));
@@ -110,7 +110,7 @@ const SignUp = () => {
               <CustomInput
                 placeholder={"John"}
                 label={"First Name"}
-                value={firstname}
+                value={first_name}
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </div>
@@ -118,7 +118,7 @@ const SignUp = () => {
               <CustomInput
                 placeholder={"Doe"}
                 label={"Surname"}
-                value={lastname}
+                value={last_name}
                 onChange={(e) => setLastName(e.target.value)}
               />
             </div>
@@ -151,7 +151,7 @@ const SignUp = () => {
               <CustomInput
                 placeholder={"0555555599"}
                 label={"Phone"}
-                value={phone}
+                value={phone_number}
                 onChange={(e) => setPhone(e.target.value)}
                 icon={faPhone}
               />
@@ -173,7 +173,7 @@ const SignUp = () => {
               <CustomInput
                 placeholder={"**********"}
                 label={"Confirm Password"}
-                value={confirmPassword}
+                value={confirm_password}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 icon={faLock}
               />
