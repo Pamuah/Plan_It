@@ -9,6 +9,7 @@ const CustomInput = ({
   label = "",
   value = "",
   icon = null,
+  type = "text",
 }) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -30,8 +31,8 @@ const CustomInput = ({
           </span>
         )}
         <input
-          type="text"
-          className="p-2 flex-1 outline-none bg-transparent text-gray-500 font-inter rounded-lg placeholder:text-xs placeholder:text-slate-500"
+          type={type}
+          className="p-2 flex-1 outline-none bg-transparent text-gray-500 text-xs font-inter rounded-lg placeholder:text-xs placeholder:text-slate-500"
           placeholder={placeholder}
           value={value}
           onChange={onChange}
