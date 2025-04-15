@@ -9,6 +9,7 @@ import {
   faLock,
 } from "@fortawesome/free-solid-svg-icons";
 import { sendControlData } from "../Api_Services/services";
+import Footer from "../components/footer";
 
 const SignUp = () => {
   const [first_name, setFirstName] = useState("");
@@ -67,29 +68,41 @@ const SignUp = () => {
           <h6>**Logo**</h6>
         </div>
         {/* Routes */}
-        <div className="gap-8 flex flex-row items-center">
-          <a href="/signUp" className="text-black text-sm">
+        <div className="gap-5 flex flex-row items-center">
+          <a
+            href="/signUp"
+            className="text-black text-sm px-3 py-1 rounded-lg hover:bg-blue-500 transition-all duration-200"
+          >
             Home
           </a>
-          <a href="/signUp" className="text-black text-sm">
+          <a
+            href="/signUp"
+            className="text-black text-sm px-3 py-1 rounded-lg hover:bg-blue-500  transition-all duration-200"
+          >
             About us
           </a>
-          <a href="/signUp" className="text-black text-sm">
+          <a
+            href="/signUp"
+            className="text-black text-sm px-3 py-1 rounded-lg hover:bg-blue-500 transition-all duration-200"
+          >
             Contact us
           </a>
-          <a href="/signUp" className="text-black text-sm">
+          <a
+            href="/signUp"
+            className="text-black text-sm px-3 py-1 rounded-lg hover:bg-blue-500 transition-all duration-200"
+          >
             Payment
           </a>
           <CustomButton
             title="Login"
             onPress={() => {}}
-            className="h-8 w-auto text-sm "
+            className="h-8 w-auto text-sm"
           />
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-1 w-full h-128 flex-row justify-center items-center px-36 pt-2">
+      <div className="flex flex-1 w-full h-128 flex-row justify-center items-center px-36 pt-2 pb-2 ">
         {/* Image with dark overlay */}
         <div className="relative flex flex-col items-center justify-center w-1/2 h-128">
           <img
@@ -108,6 +121,7 @@ const SignUp = () => {
           <div className="flex w-full gap-4">
             <div className="w-1/2">
               <CustomInput
+                width={"w-full"}
                 placeholder={"John"}
                 label={"First Name"}
                 value={first_name}
@@ -116,6 +130,7 @@ const SignUp = () => {
             </div>
             <div className="w-1/2">
               <CustomInput
+                width={"w-full"}
                 placeholder={"Doe"}
                 label={"Surname"}
                 value={last_name}
@@ -140,6 +155,8 @@ const SignUp = () => {
           <div className="flex w-full gap-4">
             <div className="w-1/2">
               <CustomInput
+                width={"w-full"}
+                type={"email"}
                 placeholder={"doe@gmail.com"}
                 label={"Email"}
                 value={email}
@@ -149,6 +166,7 @@ const SignUp = () => {
             </div>
             <div className="w-1/2">
               <CustomInput
+                width={"w-full"}
                 placeholder={"0555555599"}
                 label={"Phone"}
                 value={phone_number}
@@ -162,6 +180,8 @@ const SignUp = () => {
           <div className="flex w-full gap-4">
             <div className="w-1/2">
               <CustomInput
+                width={"w-full"}
+                type={"password"}
                 placeholder={"**********"}
                 label={"Password"}
                 value={password}
@@ -171,6 +191,8 @@ const SignUp = () => {
             </div>
             <div className="w-1/2">
               <CustomInput
+                width={"w-full"}
+                type={"password"}
                 placeholder={"**********"}
                 label={"Confirm Password"}
                 value={confirm_password}
@@ -199,6 +221,9 @@ const SignUp = () => {
           </p>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
