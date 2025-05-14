@@ -1,6 +1,6 @@
 import React from "react";
 import CustomInput from "../components/custom_input";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomButton from "../components/CustomButton";
 import {
   faUser,
@@ -10,6 +10,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { sendControlData } from "../Api_Services/services";
 import Footer from "../components/footer";
+import axios from "axios";
+import useDebounce from "../hooks/useDebounce";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   const [first_name, setFirstName] = useState("");
@@ -19,6 +22,37 @@ const SignUp = () => {
   const [confirm_password, setConfirmPassword] = useState("");
   const [phone_number, setPhone] = useState("");
   const [username, setUsername] = useState("");
+  const [user_exists, setUserExists] = useState(null);
+  const [checkingUser, setCheckingUser] = useState(false);
+
+  const navigate = useNavigate();
+
+  const debounceUsername = useDebounce(username, 1000);
+  //checking if username  exists
+  const Check_User = async () => {
+    setCheckingUser(true);
+
+    try {
+      const response = await axios.get(
+        `https://plan-it-rzv3.onrender.com/users/check-username/?username=${username}`
+      );
+      setUserExists(response.data.available);
+      console.log(response.data.available);
+    } catch (error) {
+      console.error("An Error occured", error);
+      setUserExists(null);
+    } finally {
+      setCheckingUser(false);
+    }
+  };
+
+  useEffect(() => {
+    if (debounceUsername.length >= 3) {
+      Check_User(debounceUsername);
+    } else {
+      setUserExists(null);
+    }
+  }, [debounceUsername]);
 
   const handle_Submit = async () => {
     console.log("clicked");
@@ -41,15 +75,16 @@ const SignUp = () => {
     const data = {
       first_name,
       last_name,
+      username,
       email,
+      phone_number,
       password,
       confirm_password,
-      phone_number,
-      username,
     };
     console.log("payload being sent", JSON.stringify(data));
     try {
       const response = await sendControlData(data, "/users/register/");
+
       console.log("Server Response:", response);
 
       alert("registered successfully");
@@ -95,7 +130,9 @@ const SignUp = () => {
           </a>
           <CustomButton
             title="Login"
-            onPress={() => {}}
+            onPress={() => {
+              navigate("/signIn");
+            }}
             className="h-8 w-auto text-sm"
           />
         </div>
@@ -140,7 +177,7 @@ const SignUp = () => {
           </div>
 
           {/* Username */}
-          <div className="w-full">
+          <div className="relative w-full">
             <CustomInput
               width={"w-full"}
               placeholder={"Daddy joe"}
@@ -149,6 +186,17 @@ const SignUp = () => {
               onChange={(e) => setUsername(e.target.value)}
               icon={faUser}
             />
+
+            {/* Status Icon */}
+            {checkingUser ? (
+              <span className="absolute right-3 top-10 text-gray-400 animate-spin">
+                ⏳
+              </span>
+            ) : user_exists === false ? (
+              <span className="absolute right-3 top-10 text-red-500">❌</span>
+            ) : user_exists === true ? (
+              <span className="absolute right-3 top-10 text-green-500">✅</span>
+            ) : null}
           </div>
 
           {/* Email & Phone */}
@@ -164,7 +212,7 @@ const SignUp = () => {
                 icon={faEnvelope}
               />
             </div>
-            <div className="w-1/2">
+            <div className="w-1/2 pr-4">
               <CustomInput
                 width={"w-full"}
                 placeholder={"0555555599"}
@@ -189,7 +237,7 @@ const SignUp = () => {
                 icon={faLock}
               />
             </div>
-            <div className="w-1/2">
+            <div className="w-1/2 pr-4">
               <CustomInput
                 width={"w-full"}
                 type={"password"}
