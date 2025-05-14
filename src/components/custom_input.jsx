@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const CustomInput = ({
   width = "w-55",
-  height = "h-8",
+  height = "min-h-8",
   placeholder = "",
   onChange = () => {},
   label = "",
