@@ -2,6 +2,7 @@ import React from "react";
 import CustomButton from "../components/CustomButton";
 import Footer from "../components/footer";
 
+
 const LandingPage = () => {
   return (
     <div className="flex flex-col min-h-screen w-screen bg-background">
@@ -15,7 +16,7 @@ const LandingPage = () => {
           <CustomButton
             title="Login"
             onPress={() => {}}
-            className="h-8 w-auto text-sm "
+
           />
           <CustomButton
             title="Register"
@@ -25,6 +26,7 @@ const LandingPage = () => {
         </div>
       </div>
       <div className="flex flex-col items-start justify-start px-6 py-8 text-start">
+
         <h1 className="text-4xl font-bold text-black mb-2">
           Landing Page Title
         </h1>
