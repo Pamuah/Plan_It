@@ -30,6 +30,16 @@ const vendorData = [
     rating: "4.5",
     jobs_done: "110",
   },
+  {
+    id: 4,
+    imageUrl:
+      "https://th.bing.com/th/id/R.db41cd01dcd896b9cd196dd8d48bc9e8?rik=9tF5nhe6a8QAmg&pid=ImgRaw&r=0",
+    alt: "catering",
+    businessName: "Croissant Bakery",
+    description: "We offer catering services for your events",
+    rating: "4.5",
+    jobs_done: "203",
+  },
 ];
 
 export default vendorData;

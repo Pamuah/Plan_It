@@ -7,6 +7,9 @@ import fyData from "../utils/fyData";
 import FYCard from "../components/fyCard";
 import Footer from "../components/footer";
 import Carousel from "../components/carousel";
+import ReviewCard from "../components/reviewCard";
+import ReviewsData from "../utils/reviewData";
+import SearchBar from "../components/search";
 import { ShoppingCart, Calendar } from "lucide-react";
 const HomePage = () => {
   const navigate = useNavigate();
@@ -17,6 +20,10 @@ const HomePage = () => {
         {/* Logo */}
         <div>
           <h6 className="text-sm font-bold text-slate-500">**Logo**</h6>
+        </div>
+        {/* SearchBar */}
+        <div className="flex flex-row items-center gap-4">
+          <SearchBar placeholder="Search..." onChange={() => {}} />
         </div>
         {/* Routes */}
         <div className="flex flex-row items-center gap-4">
@@ -34,12 +41,7 @@ const HomePage = () => {
             <ShoppingCart className="w-4 h-4" />
             Add to Cart
           </a>
-          <a
-            href="/signUp"
-            className="px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
-          >
-            Contact us
-          </a>
+
           <a
             href="/signUp"
             className="px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
@@ -59,7 +61,7 @@ const HomePage = () => {
         <h2 className="mb-4 text-xl font-semibold text-slate-700">
           Top Vendors
         </h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4 ">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4 lg:grid-cols-4 ">
           {vendorData.map((vendor) => (
             <VendorCard
               key={vendor.id}
@@ -88,6 +90,21 @@ const HomePage = () => {
             />
           ))}
         </div>
+      </div>
+
+      {/* Review Section */}
+      <h2 className="px-6 text-xl font-semibold text-slate-700">Reviews</h2>
+      <div className="grid items-start justify-center grid-cols-1 gap-3 px-6 py-4 md:grid-cols-4 lg:grid-cols-5">
+        {ReviewsData.map((item, index) => (
+          <ReviewCard
+            key={index}
+            name={item.name}
+            review={item.review}
+            rating={item.rating}
+            image={item.image}
+            date={item.date}
+          />
+        ))}
       </div>
       <Footer />
     </div>
