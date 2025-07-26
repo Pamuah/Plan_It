@@ -83,27 +83,27 @@ const Vendor = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col min-h-screen w-screen bg-background">
+    <div className="flex flex-col w-screen min-h-screen bg-background">
       {/* Nav Bar */}
-      <div className="h-16 w-full items-center justify-between bg-blue shadow-lg px-6 py-2 flex flex-row">
+      <div className="flex flex-row items-center justify-between w-full h-16 px-6 py-2 shadow-lg bg-blue">
         <div>
-          <h6 className="text-white font-bold">Plan-It Logo</h6>
+          <h6 className="font-bold text-white">Plan-It Logo</h6>
         </div>
-        <div className="gap-5 flex flex-row items-center">
+        <div className="flex flex-row items-center gap-5">
           <CustomButton
             title="Home"
             onPress={() => navigate("/")}
-            className="text-white text-sm px-3 py-1 rounded-lg hover:bg-blue-600 transition-all duration-200"
+            className="px-3 py-1 text-sm text-white transition-all duration-200 rounded-lg hover:bg-blue-600"
           />
           <CustomButton
             title="Dashboard"
             onPress={() => navigate("/dashboard")}
-            className="text-white text-sm px-3 py-1 rounded-lg hover:bg-blue-600 transition-all duration-200"
+            className="px-3 py-1 text-sm text-white transition-all duration-200 rounded-lg hover:bg-blue-600"
           />
           <CustomButton
             title="Logout"
             onPress={() => navigate("/signIn")}
-            className="h-8 w-auto text-sm"
+            className="w-auto h-8 text-sm"
           />
         </div>
       </div>
@@ -114,12 +114,12 @@ const Vendor = () => {
           {showcaseVendors.map((vendor) => (
             <div
               key={vendor.id}
-              className="bg-white shadow-md rounded-md p-4 flex flex-col items-center"
+              className="flex flex-col items-center p-4 bg-white rounded-md shadow-md"
             >
               <img
                 src={vendor.image}
                 alt={vendor.name}
-                className="w-full h-64 object-cover rounded-md mb-2"
+                className="object-cover w-full h-64 mb-2 rounded-md"
               />
               <h3 className="text-xl font-semibold text-black">
                 {vendor.name}
@@ -132,7 +132,7 @@ const Vendor = () => {
           {showcaseVendors.map((_, index) => (
             <span
               key={index}
-              className="mx-1 w-2 h-2 bg-gray-300 rounded-full"
+              className="w-2 h-2 mx-1 bg-gray-300 rounded-full"
             ></span>
           ))}
         </div>
@@ -142,10 +142,10 @@ const Vendor = () => {
       <div className="p-6">
         {Object.entries(categories).map(([category, vendors]) => (
           <div key={category} className="mb-6">
-            <h2 className="text-2xl font-bold text-black mb-4">
+            <h2 className="mb-4 text-2xl font-bold text-black">
               {category} Vendors
             </h2>
-            <div className="flex overflow-x-auto space-x-4 pb-4">
+            <div className="flex pb-4 space-x-4 overflow-x-auto">
               {vendors.map((vendor) => (
                 <div
                   key={vendor.id}
@@ -154,12 +154,12 @@ const Vendor = () => {
                   <img
                     src={vendor.image}
                     alt={vendor.name}
-                    className="w-full h-32 object-cover rounded-md mb-2"
+                    className="object-cover w-full h-32 mb-2 rounded-md"
                   />
                   <h3 className="text-lg font-semibold text-black">
                     {vendor.name}
                   </h3>
-                  <span className="text-sm bg-blue-500 text-white px-2 py-1 rounded">
+                  <span className="px-2 py-1 text-sm text-white bg-blue-500 rounded">
                     {vendor.category}
                   </span>
                 </div>
@@ -167,7 +167,7 @@ const Vendor = () => {
               <CustomButton
                 title="See More"
                 onPress={() => navigate(`/vendors/${category.toLowerCase()}`)}
-                className="h-10 w-auto bg-blue-500 text-white hover:bg-blue-600 mt-2"
+                className="w-auto h-10 mt-2 text-white bg-blue-500 hover:bg-blue-600"
               />
             </div>
           </div>
@@ -176,8 +176,8 @@ const Vendor = () => {
 
       {/* Reviews Section */}
       <div className="p-6">
-        <h2 className="text-2xl font-bold text-black mb-4">Reviews</h2>
-        <div className="flex overflow-x-auto space-x-4 pb-4">
+        <h2 className="mb-4 text-2xl font-bold text-black">Reviews</h2>
+        <div className="flex pb-4 space-x-4 overflow-x-auto">
           {reviews.map((review) => (
             <div
               key={review.id}
@@ -193,7 +193,7 @@ const Vendor = () => {
           <CustomButton
             title="See All Reviews"
             onPress={() => navigate("/reviews")}
-            className="h-10 w-auto bg-blue-500 text-white hover:bg-blue-600 mt-2"
+            className="w-auto h-10 mt-2 text-white bg-blue-500 hover:bg-blue-600"
           />
         </div>
       </div>
