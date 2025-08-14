@@ -9,12 +9,13 @@ import LandingPage from "./pages/LandingPage";
 import HomePage from "./pages/homePage";
 import Vendor from "./pages/Vendor";
 import MyCartPage from "./pages/MyCartPage";
+import Management from "./pages/managementPage";
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route index element={<Vendor />} />
+        <Route index element={<LandingPage />} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/reset" element={<ForgotPassword />} />
@@ -22,8 +23,8 @@ const App = () => {
         <Route path="/vendors" element={<Vendor />} />
         <Route path="/myCart" element={<MyCartPage />} />
         <Route path="/LandingPage" element={<LandingPage />} />
-        <Route path="/homePage" element={<HomePage />} />
-
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/manage" element={<Management />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </Router>

@@ -5,7 +5,7 @@ const Carousel = () => {
     <div className="w-full carousel">
       <div id="slide1" className="relative w-full carousel-item">
         <img
-          src="https://rhinopass.s3.amazonaws.com/media/WhatsApp_Image_2024-05-03_at_10.04.09.jpeg"
+          src="https://www.appventurez.com/wp-content/uploads/2020/11/how-to-build-food-delivery-app-like-grubhub.jpg"
           className="w-full"
         />
         <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
@@ -19,7 +19,7 @@ const Carousel = () => {
       </div>
       <div id="slide2" className="relative w-full carousel-item">
         <img
-          src="https://www.appventurez.com/wp-content/uploads/2020/11/how-to-build-food-delivery-app-like-grubhub.jpg"
+          src="https://rhinopass.s3.amazonaws.com/media/WhatsApp_Image_2024-05-03_at_10.04.09.jpeg"
           className="w-full"
         />
         <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">

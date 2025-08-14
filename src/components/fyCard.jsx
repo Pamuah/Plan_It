@@ -8,9 +8,13 @@ const FYCard = ({
   description,
   rating,
   jobs_done,
+  onClick,
 }) => {
   return (
-    <div className="text-xs bg-white rounded-lg shadow-sm gap-y-2 text-slate-700">
+    <div
+      onClick={onClick}
+      className="text-xs bg-white rounded-lg shadow-sm gap-y-2 text-slate-700"
+    >
       <img src={imageUrl} alt={alt} className="w-full h-30" />
 
       <div className="flex flex-col items-start px-2 mt-2 text-center">

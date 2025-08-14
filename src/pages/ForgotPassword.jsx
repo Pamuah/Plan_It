@@ -30,52 +30,52 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-screen bg-background">
+    <div className="flex flex-col w-screen min-h-screen bg-background">
       {/* Nav Bar */}
-      <div className="h-16 w-full items-center justify-between bg-white shadow-lg px-6 py-2 flex flex-row">
+      <div className="flex flex-row items-center justify-between w-full h-16 px-6 py-2 bg-white shadow-lg">
         {/* Logo */}
         <div>
           <h6>**Logo**</h6>
         </div>
         {/* Routes */}
-        <div className="gap-4 flex flex-row items-center">
+        <div className="flex flex-row items-center gap-4">
           <a
             href="/"
-            className="text-black text-xs px-3 py-1 rounded-lg hover:bg-blue-500 transition-all duration-200"
+            className="px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
           >
             Home
           </a>
           <a
             href="/about"
-            className="text-black text-xs px-3 py-1 rounded-lg hover:bg-blue-500 transition-all duration-200"
+            className="px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
           >
             About us
           </a>
           <a
             href="/contact"
-            className="text-black text-xs px-3 py-1 rounded-lg hover:bg-blue-500 transition-all duration-200"
+            className="px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
           >
             Contact us
           </a>
           <a
             href="/payment"
-            className="text-black text-xs px-3 py-1 rounded-lg hover:bg-blue-500 transition-all duration-200"
+            className="px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
           >
             Payment
           </a>
           <CustomButton
             title="Sign In"
             onPress={() => navigate("/signIn")}
-            className="h-8 w-auto text-sm"
+            className="w-auto h-8 text-sm"
           />
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex flex-1 w-full h-128 justify-center items-center px-36 pt-2 pb-2">
+      <div className="flex items-center justify-center flex-1 w-full pt-2 pb-2 h-128 px-36">
         {/* Form */}
-        <div className="flex flex-col items-start justify-start w-2/5 h-128 bg-white shadow-lg px-4 py-6 rounded-sm">
-          <h6 className="text-2xl font-bold font-inter text-slate-700 mb-4">
+        <div className="flex flex-col items-start justify-start w-2/5 px-4 py-6 bg-white rounded-sm shadow-lg h-128">
+          <h6 className="mb-4 text-2xl font-bold font-inter text-slate-700">
             FORGOT PASSWORD
           </h6>
 
@@ -94,15 +94,18 @@ const ForgotPassword = () => {
 
           <CustomButton
             title="Send Reset Link"
-            onPress={handleSubmit}
-            className="h-8 w-9/10 text-sm my-4 text-semibold rounded-sm py-1"
+            onPress={
+              //handleSubmit
+              navigate("/reset-password/:token")
+            }
+            className="h-8 py-1 my-4 text-sm rounded-sm w-9/10 text-semibold"
           />
 
           <p className="text-xs font-normal text-slate-500">
             Back to{" "}
             <a
               href="/signIn"
-              className="text-amber-400 hover:underline font-semibold"
+              className="font-semibold text-amber-400 hover:underline"
             >
               Sign In
             </a>

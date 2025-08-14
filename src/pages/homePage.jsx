@@ -28,15 +28,15 @@ const HomePage = () => {
         {/* Routes */}
         <div className="flex flex-row items-center gap-4">
           <a
-            href="/signUp"
-            className="flex flex-row items-center gap-2 px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
+            href="/manage"
+            className="flex flex-row items-center gap-2 px-2 py-1.5 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
           >
             <Calendar className="w-4 h-4" />
-            Events
+            Event Manager
           </a>
           <a
-            href="/signUp"
-            className="flex flex-row items-center gap-2 px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
+            href="/myCart"
+            className="flex flex-row items-center gap-2 px-2 py-1.5 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
           >
             <ShoppingCart className="w-4 h-4" />
             Add to Cart
@@ -44,7 +44,7 @@ const HomePage = () => {
 
           <a
             href="/signUp"
-            className="px-3 py-1 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
+            className="px-2 py-1.5 text-xs text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
           >
             Payment
           </a>
@@ -72,6 +72,7 @@ const HomePage = () => {
               description={vendor.description}
               rating={vendor.rating}
               jobs_done={vendor.jobs_done}
+              onClick={() => navigate("/vendors")}
             />
           ))}
         </div>
@@ -87,6 +88,7 @@ const HomePage = () => {
               description={item.description}
               rating={item.rating}
               jobs_done={item.jobs_done}
+              onClick={() => navigate("/vendors")}
             />
           ))}
         </div>

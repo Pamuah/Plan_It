@@ -2,30 +2,28 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import CustomButton from "../components/CustomButton";
 import Footer from "../components/footer";
-import SwipeableViews from "react-swipeable-views";
-import { autoPlay } from "react-swipeable-views-utils";
 
 // Mock data
-const showcaseVendors = [
-  {
-    id: 1,
-    name: "Vendor A",
-    description: "Event Decor Specialist",
-    image: "https://via.placeholder.com/400x200",
-  },
-  {
-    id: 2,
-    name: "Vendor B",
-    description: "Catering Expert",
-    image: "https://via.placeholder.com/400x200",
-  },
-  {
-    id: 3,
-    name: "Vendor C",
-    description: "Entertainment Pro",
-    image: "https://via.placeholder.com/400x200",
-  },
-];
+// const showcaseVendors = [
+//   {
+//     id: 1,
+//     name: "Vendor A",
+//     description: "Event Decor Specialist",
+//     image: "https://via.placeholder.com/400x200",
+//   },
+//   {
+//     id: 2,
+//     name: "Vendor B",
+//     description: "Catering Expert",
+//     image: "https://via.placeholder.com/400x200",
+//   },
+//   {
+//     id: 3,
+//     name: "Vendor C",
+//     description: "Entertainment Pro",
+//     image: "https://via.placeholder.com/400x200",
+//   },
+// ];
 
 const categories = {
   Decor: [
@@ -77,8 +75,6 @@ const reviews = [
   { id: 2, name: "Jane Smith", rating: "★★★★★", text: "Highly recommend!" },
 ];
 
-const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
-
 const Vendor = () => {
   const navigate = useNavigate();
 
@@ -108,7 +104,7 @@ const Vendor = () => {
         </div>
       </div>
 
-      {/* Mini Showcase (Vendor) */}
+      {/* Mini Showcase (Vendor)
       <div className="p-6">
         <AutoPlaySwipeableViews interval={5000} enableMouseEvents>
           {showcaseVendors.map((vendor) => (
@@ -136,7 +132,7 @@ const Vendor = () => {
             ></span>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Categorized Vendors */}
       <div className="p-6">

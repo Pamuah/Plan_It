@@ -8,9 +8,13 @@ const VendorCard = ({
   description,
   rating,
   jobs_done,
+  onClick,
 }) => {
   return (
-    <div className="p-4 text-xs bg-gray-200 rounded-lg shadow-sm gap-y-2 text-slate-700">
+    <div
+      onClick={onClick}
+      className="p-4 text-xs bg-gray-200 rounded-lg shadow-sm gap-y-2 text-slate-700"
+    >
       <img
         src={imageUrl}
         alt={alt}
