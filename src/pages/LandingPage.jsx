@@ -1,207 +1,397 @@
-import React from "react";
-import CustomButton from "../components/CustomButton";
-import Footer from "../components/footer";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+// ─── Lazy Image with skeleton loader ────────────────────────────────────────
+const LazyImage = ({ src, alt, className }) => {
+  const [loaded, setLoaded] = useState(false);
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+      {/* Skeleton */}
+      {!loaded && (
+        <div className="absolute inset-0 bg-neutral-800 animate-pulse">
+          <div className="absolute inset-0 bg-gradient-to-r from-neutral-800 via-neutral-700 to-neutral-800 animate-shimmer" />
+        </div>
+      )}
+      {inView && (
+        <img
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          onLoad={() => setLoaded(true)}
+          className={`w-full h-full object-cover transition-opacity duration-700 ${loaded ? "opacity-100" : "opacity-0"}`}
+        />
+      )}
+    </div>
+  );
+};
+
+// ─── Fade-in on scroll ───────────────────────────────────────────────────────
+const FadeIn = ({ children, delay = 0, className = "" }) => {
+  const [visible, setVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ${className}`}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(28px)",
+        transitionDelay: `${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+// ─── Nav Button ──────────────────────────────────────────────────────────────
+const NavBtn = ({ title, onPress, outline }) => (
+  <button
+    onClick={onPress}
+    className={`px-5 py-2 text-sm font-semibold tracking-widest uppercase transition-all duration-200 rounded-sm cursor-pointer ${
+      outline
+        ? "border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-neutral-900"
+        : "bg-blue-500 text-white hover:bg-blue-400"
+    }`}
+  >
+    {title}
+  </button>
+);
+
+// ─── Section Label ───────────────────────────────────────────────────────────
+const SectionLabel = ({ children }) => (
+  <div className="flex items-center gap-4 mb-3">
+    <span className="w-8 h-px bg-blue-400" />
+    <span className="text-xs font-bold tracking-[0.25em] uppercase text-blue-400">
+      {children}
+    </span>
+  </div>
+);
+
+// ─── Event Card ──────────────────────────────────────────────────────────────
+const EventCard = ({ src, title, description, delay }) => (
+  <FadeIn delay={delay} className="flex-1">
+    <div className="relative h-64 mb-4 overflow-hidden rounded-sm group">
+      <LazyImage
+        src={src}
+        alt={title}
+        className="w-full h-full transition-transform duration-700 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent" />
+      <p className="absolute text-xl font-bold tracking-wide text-white bottom-4 left-4">
+        {title}
+      </p>
+    </div>
+    <p className="text-sm leading-relaxed text-neutral-400">{description}</p>
+  </FadeIn>
+);
+
+// ─── Main Landing Page ───────────────────────────────────────────────────────
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <div className="flex flex-col w-screen min-h-screen bg-background">
-      <div className="flex flex-row items-center justify-between w-full h-16 px-6 py-2 bg-blue-500 shadow-lg">
-        {/* Logo */}
-        <div>
-          <h6>*Logo*</h6>
+    <div className="flex flex-col w-screen min-h-screen font-sans text-white bg-neutral-950">
+      {/* ── Navbar ── */}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 h-16 transition-all duration-300 ${scrolled ? "bg-neutral-950/95 backdrop-blur border-b border-neutral-800 shadow-xl" : "bg-transparent"}`}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-2xl font-black tracking-tight text-blue-400">
+            EVE
+          </span>
+          <span className="text-2xl font-light tracking-tight text-white">
+            NT
+          </span>
+          <span className="ml-1 text-xs font-medium tracking-widest uppercase text-neutral-500">
+            Co.
+          </span>
         </div>
-        {/* Routes */}
-        <div className="flex flex-row items-center gap-8">
-          <CustomButton
-            title="Login"
-            onPress={() => {
-              navigate("/signIn");
-            }}
-          />
-          <CustomButton
-            title="Register"
-            onPress={() => {
-              navigate("/signUp");
-            }}
-            className="w-auto h-8 text-sm "
-          />
+        <div className="flex items-center gap-4">
+          <NavBtn title="Login" onPress={() => navigate("/signIn")} outline />
+          <NavBtn title="Register" onPress={() => navigate("/signUp")} />
         </div>
-      </div>
-      <div className="flex flex-col items-start justify-start px-6 py-8 text-start">
-        <h1 className="mb-2 text-4xl font-bold text-black">
-          Landing Page Title
-        </h1>
-        <p className="max-w-xl text-lg text-gray-600">
-          Your vision, brought to life. <br />
-          Seamless planning, exceptional experiences. <br />
-          Let us create your unforgettable event.
-        </p>
-      </div>
+      </nav>
 
-      {/* Main Content */}
-      <div className="flex flex-col items-start justify-start w-full px-2 pt-1">
-        {/* Image with dark overlay */}
-        <div className="relative flex flex-col items-center justify-center w-full h-[32rem]">
-          <img
-            src="../assets/concertphoto.jpg"
-            className="object-cover w-full h-full rounded-md"
-          />
-        </div>
-      </div>
+      {/* ── Hero ── */}
+      <div className="relative flex items-end w-full h-screen overflow-hidden">
+        <LazyImage
+          src="../assets/concertphoto.jpg"
+          alt="Hero"
+          className="absolute inset-0 w-full h-full"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-neutral-950/20" />
 
-      <div className="flex flex-col items-start justify-start px-6 py-8 text-start">
-        <h1 className="mb-2 text-4xl font-bold text-black">Parties</h1>
-      </div>
-
-      <div className="flex flex-row w-full h-auto gap-4 px-2 pt-1">
-        {/* Birthdays */}
-        <div className="flex-1 h-full">
-          <img
-            src="../assets/birthday photo.jpg"
-            className="object-cover w-full h-64 rounded-md md:64 lg:80"
-          />
-          <p className="text-xl text-start text-black-700">Birthdays</p>
-          <p className="max-w-xl text-lg text-gray-600">
-            Make your birthdays fun with personalised themes, <br />
-            fun activities, and flawless execution. <br />
-            Let us handle the details while you enjoy the celebration!
-          </p>
-        </div>
-
-        {/* Weddings */}
-        <div className="flex-1 h-full">
-          <img
-            src="../assets/wedding photo.jpg"
-            className="object-cover w-full h-64 rounded-md md:64 lg:80"
-          />
-          <p className="text-xl text-start text-black-700">Weddings</p>
-          <p className="max-w-xl text-lg text-gray-600">
-            Celebrate your love story with a wedding that’s as unique as you
-            are. <br />
-            From intimate ceremonies to grand receptions. <br />
-            we craft every detail to make your special day unforgettable..
-          </p>
-        </div>
-
-        {/* other events */}
-        <div className="flex-1 h-full">
-          <img
-            src="../assets/funeral photo.jpg"
-            className="object-cover w-full h-64 rounded-md md:64 lg:80"
-          />
-          <p className="text-xl text-start text-black-700">Other Events</p>
-          <p className="max-w-xl text-lg text-gray-600">
-            No matter the occasion, we bring your vision to life. <br />
-            Whether it’s a corporate event, anniversary, <br />
-            or any special gathering, we ensure every moment is memorable and
-            seamlessly executed.
-          </p>
-        </div>
-      </div>
-      <div className="flex flex-col items-start justify-start px-6 py-8 text-start">
-        <h1 className="mb-2 text-4xl font-bold text-black">Concerts</h1>
-      </div>
-
-      <div className="flex w-full h-auto px-6 py-8">
-        {/* Left Side (Text) */}
-        <div className="flex flex-col justify-start w-1/2 px-4">
-          <div className="mb-6">
-            <p className="text-xl text-start text-black-700">
-              Musical Concerts
+        <div className="relative z-10 max-w-3xl px-10 pb-20">
+          <FadeIn delay={100}>
+            <SectionLabel>Premium Event Planning</SectionLabel>
+          </FadeIn>
+          <FadeIn delay={250}>
+            <h1 className="text-6xl md:text-7xl font-black leading-[1.05] tracking-tight mb-6">
+              Your Vision,
+              <br />
+              <span className="text-blue-400">Brought to Life.</span>
+            </h1>
+          </FadeIn>
+          <FadeIn delay={400}>
+            <p className="max-w-lg mb-8 text-lg leading-relaxed text-neutral-300">
+              Seamless planning and exceptional execution — from intimate
+              gatherings to grand spectacles. Let us craft your unforgettable
+              moment.
             </p>
-            <p className="text-lg text-gray-600">
-              Experience the thrill of live music! Our concerts bring you closer
-              to your favorite artists with unforgettable performances and an
-              electric atmosphere.
-            </p>
-          </div>
-
-          <div className="mb-6">
-            <p className="text-xl text-start text-black-700">Comedy Concerts</p>
-            <p className="text-lg text-gray-600">
-              Experience the thrill of live comedy! Our comedy concerts bring
-              laughter, fun, and a memorable experience for everyone.
-            </p>
-          </div>
-
-          <div>
-            <p className="text-xl text-start text-black-700">
-              Conventions and Rallies
-            </p>
-            <p className="text-lg text-gray-600">
-              Experience the excitement of conventions and rallies! We bring
-              people together to share ideas, passions, and enthusiasm.
-            </p>
-          </div>
-          <div>
-            <div className="flex flex-row items-center gap-8">
-              <CustomButton
-                title="Login"
-                onPress={() => {}}
-                className="w-auto h-8 text-sm "
-              />
-              <CustomButton
-                title="Register"
-                onPress={() => {}}
-                className="w-auto h-8 text-sm "
-              />
+          </FadeIn>
+          <FadeIn delay={550}>
+            <div className="flex gap-4">
+              <NavBtn title="Get Started" onPress={() => navigate("/signUp")} />
+              <NavBtn title="Learn More" onPress={() => {}} outline />
             </div>
+          </FadeIn>
+        </div>
+      </div>
+
+      {/* ── Parties Section ── */}
+      <section className="px-8 pt-20 pb-12">
+        <FadeIn>
+          <SectionLabel>Celebrations</SectionLabel>
+          <h2 className="mb-2 text-4xl font-black tracking-tight">
+            Parties <span className="text-blue-400">&</span> Gatherings
+          </h2>
+          <p className="max-w-lg mb-12 text-neutral-400">
+            Every celebration deserves a touch of magic. We tailor every detail
+            to your vision.
+          </p>
+        </FadeIn>
+        <div className="flex flex-col gap-8 md:flex-row">
+          <EventCard
+            src="../assets/birthday photo.jpg"
+            title="Birthdays"
+            description="Personalised themes, fun activities, and flawless execution. Enjoy the celebration while we handle every detail."
+            delay={0}
+          />
+          <EventCard
+            src="../assets/wedding photo.jpg"
+            title="Weddings"
+            description="From intimate ceremonies to grand receptions — we craft every detail to make your special day truly unforgettable."
+            delay={150}
+          />
+          <EventCard
+            src="../assets/funeral photo.jpg"
+            title="Other Events"
+            description="Corporate events, anniversaries, or special gatherings — we ensure every moment is memorable and seamlessly executed."
+            delay={300}
+          />
+        </div>
+      </section>
+
+      {/* ── Divider ── */}
+      <div className="mx-8 my-4 border-t border-neutral-800" />
+
+      {/* ── Concerts Section ── */}
+      <section className="px-8 py-16">
+        <div className="flex flex-col items-center gap-12 md:flex-row">
+          {/* Left text */}
+          <div className="flex-1">
+            <FadeIn>
+              <SectionLabel>Live Entertainment</SectionLabel>
+              <h2 className="mb-8 text-4xl font-black tracking-tight">
+                Concerts <span className="text-blue-400">&</span> Shows
+              </h2>
+            </FadeIn>
+
+            {[
+              {
+                title: "Musical Concerts",
+                desc: "Experience the thrill of live music. We bring you closer to your favourite artists with unforgettable performances and an electric atmosphere.",
+              },
+              {
+                title: "Comedy Concerts",
+                desc: "Laughter, fun, and a memorable experience for everyone — our comedy events deliver the perfect night out.",
+              },
+              {
+                title: "Conventions & Rallies",
+                desc: "We bring people together to share ideas, passions, and enthusiasm in one powerful, well-organized space.",
+              },
+            ].map((item, i) => (
+              <FadeIn key={item.title} delay={i * 150}>
+                <div className="pl-4 mb-6 transition-colors duration-300 border-l-2 border-blue-400/40 hover:border-blue-400">
+                  <p className="mb-1 font-bold text-white">{item.title}</p>
+                  <p className="text-sm leading-relaxed text-neutral-400">
+                    {item.desc}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+
+            <FadeIn delay={500}>
+              <div className="flex gap-4 mt-8">
+                <NavBtn
+                  title="Login"
+                  onPress={() => navigate("/signIn")}
+                  outline
+                />
+                <NavBtn title="Register" onPress={() => navigate("/signUp")} />
+              </div>
+            </FadeIn>
           </div>
-        </div>
 
-        {/* Right Side (Image) */}
-        <div className="flex justify-center w-1/2 px-4">
-          <img
-            src="../assets/rave2.jpg"
-            alt="Concert"
-            className="object-cover w-full rounded-md h-83"
-          />
+          {/* Right image */}
+          <FadeIn className="flex-1" delay={200}>
+            <div className="relative rounded-sm overflow-hidden h-[480px] group">
+              <LazyImage
+                src="../assets/rave2.jpg"
+                alt="Concert"
+                className="w-full h-full transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-transparent" />
+            </div>
+          </FadeIn>
         </div>
-      </div>
-      {/* Traditional Events */}
-      <div className="flex flex-col items-start justify-start px-6 py-8 text-start">
-        <h1 className="mb-2 text-4xl font-bold text-black">
-          Traditional Events
-        </h1>
-      </div>
-      <div className="flex w-full h-auto px-6 py-8">
-        {/* Naming Ceremony Image with text */}
-        <div className="flex flex-col items-center w-1/2 px-4">
-          <img
-            src="../assets/namingceremony2.jpg"
-            alt="Left Image"
-            className="object-cover w-full mb-4 rounded-md h-68"
-          />
-          <p className="mb-2 text-xl text-black text-start">
-            Naming Ceremonies
-          </p>
-          <p className="text-lg text-gray-600">
-            Celebrate the beautiful beginning of a new life with a heartfelt
-            naming ceremony. A special gathering of family and friends to bless
-            and welcome your little one with love, joy, and cherished
-            traditions.
-          </p>
-        </div>
+      </section>
 
-        {/* Funeral Image with text */}
-        <div className="flex flex-col items-center w-1/2 px-4">
-          <img
-            src="../assets/funeral2.JPG"
-            alt="Right Image"
-            className="object-cover w-full mb-4 rounded-md h-68"
-          />
-          <p className="mb-2 text-xl text-black text-start">Funerals</p>
-          <p className="text-lg text-gray-600">
-            We provide compassionate and respectful funeral services to help you
-            honor your loved ones. Our team is here to support you with
-            personalized arrangements that reflect the life and memory of those
-            you cherish.
+      {/* ── Divider ── */}
+      <div className="mx-8 my-4 border-t border-neutral-800" />
+
+      {/* ── Traditional Events Section ── */}
+      <section className="px-8 py-16">
+        <FadeIn>
+          <SectionLabel>Cultural</SectionLabel>
+          <h2 className="mb-2 text-4xl font-black tracking-tight">
+            Traditional <span className="text-blue-400">Events</span>
+          </h2>
+          <p className="max-w-lg mb-12 text-neutral-400">
+            Honoring culture, community, and connection with the care and
+            reverence they deserve.
           </p>
+        </FadeIn>
+
+        <div className="flex flex-col gap-8 md:flex-row">
+          {[
+            {
+              src: "../assets/namingceremony2.jpg",
+              title: "Naming Ceremonies",
+              desc: "Celebrate the beautiful beginning of a new life. A heartfelt gathering of family and friends to bless and welcome your little one with love, joy, and cherished tradition.",
+              delay: 0,
+            },
+            {
+              src: "../assets/funeral2.JPG",
+              title: "Funerals",
+              desc: "Compassionate and respectful services to help you honour your loved ones — personalized arrangements that reflect the life and memory of those you cherish.",
+              delay: 200,
+            },
+          ].map((item) => (
+            <FadeIn key={item.title} delay={item.delay} className="flex-1">
+              <div className="relative mb-4 overflow-hidden rounded-sm group h-80">
+                <LazyImage
+                  src={item.src}
+                  alt={item.title}
+                  className="w-full h-full transition-transform duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-transparent to-transparent" />
+                <p className="absolute text-xl font-bold tracking-wide text-white bottom-4 left-4">
+                  {item.title}
+                </p>
+              </div>
+              <p className="text-sm leading-relaxed text-neutral-400">
+                {item.desc}
+              </p>
+            </FadeIn>
+          ))}
         </div>
-      </div>
-      <Footer />
+      </section>
+
+      {/* ── CTA Banner ── */}
+      <FadeIn>
+        <section className="relative mx-8 mb-16 overflow-hidden rounded-sm">
+          <div className="flex flex-col items-center justify-between gap-6 px-10 py-12 bg-blue-600 md:flex-row">
+            <div>
+              <p className="text-3xl font-black tracking-tight text-white">
+                Ready to plan your event?
+              </p>
+              <p className="mt-1 text-sm text-blue-100">
+                Join hundreds of clients who trust us with their most important
+                moments.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate("/signUp")}
+              className="px-8 py-3 text-sm font-bold tracking-widest text-blue-600 uppercase transition-colors duration-200 bg-white rounded-sm cursor-pointer shrink-0 hover:bg-blue-50"
+            >
+              Get Started
+            </button>
+          </div>
+        </section>
+      </FadeIn>
+
+      {/* ── Footer ── */}
+      <footer className="flex flex-col items-center justify-between gap-4 px-8 py-8 text-xs border-t border-neutral-800 md:flex-row text-neutral-500">
+        <div className="flex items-center gap-2">
+          <span className="font-black text-blue-400">EVENT</span>
+          <span className="font-light">Co.</span>
+        </div>
+        <p>© {new Date().getFullYear()} Event Co. All rights reserved.</p>
+        <div className="flex gap-6">
+          {["Privacy", "Terms", "Contact"].map((l) => (
+            <button
+              key={l}
+              className="transition-colors cursor-pointer hover:text-blue-400"
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      </footer>
+
+      {/* ── Shimmer animation ── */}
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .animate-shimmer {
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
+        }
+      `}</style>
     </div>
   );
 };
