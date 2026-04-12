@@ -9,38 +9,68 @@ const VendorCard = ({
   rating,
   jobs_done,
   onClick,
+  badge, // optional e.g. "Top rated"
 }) => {
+  const initials = businessName
+    ?.split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+
   return (
     <div
       onClick={onClick}
-      className="p-4 text-xs bg-gray-200 rounded-lg shadow-sm gap-y-2 text-slate-700"
+      className="bg-white border border-slate-100 rounded-xl px-4 pt-5 pb-4 flex flex-col items-center text-center cursor-pointer transition-all duration-200 hover:border-blue-400 hover:-translate-y-0.5"
     >
-      <img
-        src={imageUrl}
-        alt={alt}
-        className="w-20 h-20 mx-auto rounded-full"
-      />
-
-      <div className="flex flex-col items-center mt-3 text-center">
-        <p className="text-sm font-semibold">{businessName}</p>
-        <p>{description}</p>
+      {/* Avatar with blue ring */}
+      <div className="w-[72px] h-[72px] rounded-full border-2 border-blue-200 p-0.5 mb-3 flex-shrink-0">
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={alt}
+            className="object-cover w-full h-full rounded-full"
+          />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full rounded-full bg-blue-50">
+            <span className="text-sm font-medium text-blue-700">
+              {initials}
+            </span>
+          </div>
+        )}
       </div>
 
-      <div className="flex items-center justify-center mt-2 text-sm gap-x-1">
+      {/* Optional badge */}
+      {badge && (
+        <span className="text-[10px] font-medium bg-blue-50 text-blue-700 rounded px-2 py-0.5 mb-2">
+          {badge}
+        </span>
+      )}
+
+      <p className="mb-1 text-sm font-medium text-slate-800">{businessName}</p>
+      <p className="mb-3 text-xs leading-snug text-slate-500 line-clamp-2">
+        {description}
+      </p>
+
+      <div className="w-full h-px mb-3 bg-slate-100" />
+
+      {/* Rating row */}
+      <div className="flex items-center justify-center gap-1">
         {[1, 2, 3, 4, 5].map((i) => (
           <Star
             key={i}
-            className={`w-3 h-3 ${
+            className={`w-2.5 h-2.5 ${
               i <= Math.round(rating)
-                ? "text-yellow-300 fill-yellow-300"
-                : "text-gray-300"
+                ? "text-amber-400 fill-amber-400"
+                : "text-slate-200 fill-slate-200"
             }`}
           />
         ))}
-        <span className="ml-1">{rating}</span>
-
-        <span className="ml-2 text-gray-400">•</span>
-        <span>{jobs_done} jobs</span>
+        <span className="ml-1 text-xs font-medium text-slate-700">
+          {rating}
+        </span>
+        <span className="mx-1 text-xs text-slate-300">·</span>
+        <span className="text-xs text-slate-400">{jobs_done} jobs</span>
       </div>
     </div>
   );

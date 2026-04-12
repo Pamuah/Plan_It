@@ -10,13 +10,14 @@ import HomePage from "./pages/homePage";
 import Vendor from "./pages/Vendor";
 import MyCartPage from "./pages/MyCartPage";
 import Management from "./pages/managementPage";
+import Register from "./pages/signUp";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route index element={<LandingPage />} />
-        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/signUp" element={<Register />} />
         <Route path="/signIn" element={<SignIn />} />
         <Route path="/reset" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
