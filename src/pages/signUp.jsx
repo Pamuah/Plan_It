@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import CustomInput from "../components/custom_input";
-import { useState, useEffect } from "react";
 import CustomButton from "../components/CustomButton";
 import {
   faUser,
@@ -14,7 +13,7 @@ import axios from "axios";
 import useDebounce from "../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
 
-const SignUp = () => {
+const Register = () => {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,20 +25,17 @@ const SignUp = () => {
   const [checkingUser, setCheckingUser] = useState(false);
 
   const navigate = useNavigate();
-
   const debounceUsername = useDebounce(username, 1000);
-  //checking if username  exists
-  const Check_User = async () => {
-    setCheckingUser(true);
 
+  const checkUser = async () => {
+    setCheckingUser(true);
     try {
       const response = await axios.get(
-        `https://plan-it-rzv3.onrender.com/users/check-username/?username=${username}`
+        `https://plan-it-rzv3.onrender.com/users/check-username/?username=${username}`,
       );
       setUserExists(response.data.available);
-      console.log(response.data.available);
     } catch (error) {
-      console.error("An Error occured", error);
+      console.error("An error occurred", error);
       setUserExists(null);
     } finally {
       setCheckingUser(false);
@@ -48,29 +44,33 @@ const SignUp = () => {
 
   useEffect(() => {
     if (debounceUsername.length >= 3) {
-      Check_User(debounceUsername);
+      checkUser();
     } else {
       setUserExists(null);
     }
   }, [debounceUsername]);
 
-  const handle_Submit = async () => {
-    console.log("clicked");
-    // if (password !== confirmPassword) {
-    //   alert("Passwords do not match");
-    //   return false;
-    // } else if (
-    //   firstname === "" ||
-    //   lastname === "" ||
-    //   email === "" ||
-    //   password === "" ||
-    //   confirmPassword === "" ||
-    //   phone === "" ||
-    //   username === ""
-    // ) {
-    //   alert("All fields are required");
-    //   return false;
-    // }
+  const handleSubmit = async () => {
+    if (
+      !first_name ||
+      !last_name ||
+      !email ||
+      !password ||
+      !confirm_password ||
+      !phone_number ||
+      !username
+    ) {
+      alert("All fields are required");
+      return;
+    }
+    if (password !== confirm_password) {
+      alert("Passwords do not match");
+      return;
+    }
+    if (!user_exists) {
+      alert("Username is already taken. Please choose another.");
+      return;
+    }
 
     const data = {
       first_name,
@@ -81,200 +81,212 @@ const SignUp = () => {
       password,
       confirm_password,
     };
-    console.log("payload being sent", JSON.stringify(data));
+
     try {
       const response = await sendControlData(data, "/users/register/");
-
       console.log("Server Response:", response);
-
-      alert("registered successfully");
+      alert("Registered successfully!");
+      navigate("/signIn");
     } catch (error) {
-      console.error("Registreation failed!!", error);
-      alert("Registreation failed!!");
+      console.error("Registration failed:", error);
+      alert("Registration failed. Please try again.");
     }
   };
 
   return (
-    <div className="flex flex-col w-screen min-h-screen bg-background">
+    <div className="flex flex-col w-screen min-h-screen bg-slate-50">
       {/* Nav Bar */}
-      <div className="flex flex-row items-center justify-between w-full h-16 px-6 py-2 bg-white shadow-lg">
-        {/* Logo */}
-        <div>
-          <h6>**Logo**</h6>
+      <nav className="sticky top-0 z-50 flex items-center justify-between w-full h-16 px-8 bg-white border-b shadow-sm border-slate-100">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-lg">
+            <span className="text-xs font-bold text-white">PI</span>
+          </div>
+          <span className="text-sm font-semibold text-slate-800">Plan-It</span>
         </div>
-        {/* Routes */}
-        <div className="flex flex-row items-center gap-5">
+
+        <div className="flex items-center gap-2">
           <a
-            href="/signUp"
-            className="px-3 py-1 text-sm text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
+            href="/"
+            className="px-3 py-2 text-xs font-medium transition-all duration-150 rounded-lg text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           >
             Home
           </a>
           <a
-            href="/signUp"
-            className="px-3 py-1 text-sm text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
+            href="/about"
+            className="px-3 py-2 text-xs font-medium transition-all duration-150 rounded-lg text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           >
-            About us
+            About Us
           </a>
           <a
-            href="/signUp"
-            className="px-3 py-1 text-sm text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
+            href="/contact"
+            className="px-3 py-2 text-xs font-medium transition-all duration-150 rounded-lg text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           >
-            Contact us
+            Contact Us
           </a>
           <a
-            href="/signUp"
-            className="px-3 py-1 text-sm text-black transition-all duration-200 rounded-lg hover:bg-blue-500"
+            href="/payment"
+            className="px-3 py-2 text-xs font-medium transition-all duration-150 rounded-lg text-slate-600 hover:bg-blue-50 hover:text-blue-600"
           >
             Payment
           </a>
           <CustomButton
             title="Login"
-            onPress={() => {
-              navigate("/signIn");
-            }}
-            className="w-auto h-8 text-sm"
+            onPress={() => navigate("/signIn")}
+            className="h-8 px-4 text-xs"
           />
         </div>
-      </div>
+      </nav>
 
       {/* Main Content */}
-      <div className="flex flex-row items-center justify-center flex-1 w-full pt-2 pb-2 h-128 px-36 ">
-        {/* Image with dark overlay */}
-        <div className="relative flex flex-col items-center justify-center w-1/2 h-128">
-          <img
-            src="../assets/event1.jpg"
-            className="object-cover w-full h-full rounded-md"
-          />
-        </div>
-
-        {/* Form */}
-        <div className="flex flex-col items-start justify-start w-1/2 px-4 py-6 bg-white rounded-sm shadow-lg h-128">
-          <h6 className="mb-4 text-2xl font-bold font-inter text-slate-700">
-            CUSTOMER REGISTRATION
-          </h6>
-
-          {/* First Name & Surname */}
-          <div className="flex w-full gap-4">
-            <div className="w-1/2">
-              <CustomInput
-                width={"w-full"}
-                placeholder={"John"}
-                label={"First Name"}
-                value={first_name}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-            </div>
-            <div className="w-1/2">
-              <CustomInput
-                width={"w-full"}
-                placeholder={"Doe"}
-                label={"Surname"}
-                value={last_name}
-                onChange={(e) => setLastName(e.target.value)}
-              />
+      <main className="flex items-center justify-center flex-1 px-8 py-16">
+        <div className="flex w-full max-w-4xl overflow-hidden shadow-xl rounded-2xl">
+          {/* Left — Image with dark overlay */}
+          <div className="relative hidden w-2/5 md:block">
+            <img
+              src="../assets/event1.jpg"
+              alt="Event"
+              className="object-cover w-full h-full"
+            />
+            <div className="absolute inset-0 bg-black/50" />
+            <div className="absolute inset-0 flex flex-col items-start justify-end p-8 text-white">
+              <h2 className="text-2xl font-bold leading-snug">
+                Create your
+                <br />
+                Plan-It account.
+              </h2>
+              <p className="mt-2 text-xs text-white/70">
+                Join thousands of event planners today.
+              </p>
             </div>
           </div>
 
-          {/* Username */}
-          <div className="relative w-full">
-            <CustomInput
-              width={"w-full"}
-              placeholder={"Daddy joe"}
-              label={"Username"}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              icon={faUser}
+          {/* Right — Form */}
+          <div className="flex flex-col justify-center w-full px-10 py-12 bg-white md:w-3/5">
+            <h1 className="mb-1 text-2xl font-bold text-slate-800">
+              Create an account
+            </h1>
+            <p className="mb-8 text-xs text-slate-400">
+              Fill in the details below to get started
+            </p>
+
+            {/* First Name & Last Name */}
+            <div className="flex gap-4 mb-4">
+              <div className="w-1/2">
+                <CustomInput
+                  width="w-full"
+                  placeholder="John"
+                  label="First Name"
+                  value={first_name}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
+              <div className="w-1/2">
+                <CustomInput
+                  width="w-full"
+                  placeholder="Doe"
+                  label="Surname"
+                  value={last_name}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Username with availability check */}
+            <div className="relative mb-4">
+              <CustomInput
+                width="w-full"
+                placeholder="Daddy Joe"
+                label="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                icon={faUser}
+              />
+              <span className="absolute right-3 top-9">
+                {checkingUser ? (
+                  <span className="inline-block text-gray-400 animate-spin">
+                    ⏳
+                  </span>
+                ) : user_exists === false ? (
+                  <span className="text-sm text-red-500">❌ Taken</span>
+                ) : user_exists === true ? (
+                  <span className="text-sm text-green-500">✅ Available</span>
+                ) : null}
+              </span>
+            </div>
+
+            {/* Email & Phone */}
+            <div className="flex gap-4 mb-4">
+              <div className="w-1/2">
+                <CustomInput
+                  width="w-full"
+                  type="email"
+                  placeholder="doe@gmail.com"
+                  label="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  icon={faEnvelope}
+                />
+              </div>
+              <div className="w-1/2">
+                <CustomInput
+                  width="w-full"
+                  placeholder="0555555599"
+                  label="Phone"
+                  value={phone_number}
+                  onChange={(e) => setPhone(e.target.value)}
+                  icon={faPhone}
+                />
+              </div>
+            </div>
+
+            {/* Password & Confirm Password */}
+            <div className="flex gap-4 mb-6">
+              <div className="w-1/2">
+                <CustomInput
+                  width="w-full"
+                  type="password"
+                  placeholder="••••••••••"
+                  label="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  icon={faLock}
+                />
+              </div>
+              <div className="w-1/2">
+                <CustomInput
+                  width="w-full"
+                  type="password"
+                  placeholder="••••••••••"
+                  label="Confirm Password"
+                  value={confirm_password}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  icon={faLock}
+                />
+              </div>
+            </div>
+
+            <CustomButton
+              title="Create Account"
+              onPress={handleSubmit}
+              className="w-full h-10 text-sm font-semibold rounded-lg"
             />
 
-            {/* Status Icon */}
-            {checkingUser ? (
-              <span className="absolute text-gray-400 right-3 top-10 animate-spin">
-                ⏳
-              </span>
-            ) : user_exists === false ? (
-              <span className="absolute text-red-500 right-3 top-10">❌</span>
-            ) : user_exists === true ? (
-              <span className="absolute text-green-500 right-3 top-10">✅</span>
-            ) : null}
+            <p className="mt-6 text-xs text-center text-slate-400">
+              Already have an account?{" "}
+              <a
+                href="/signIn"
+                className="font-semibold text-blue-600 hover:underline"
+              >
+                Sign in
+              </a>
+            </p>
           </div>
-
-          {/* Email & Phone */}
-          <div className="flex w-full gap-4">
-            <div className="w-1/2">
-              <CustomInput
-                width={"w-full"}
-                type={"email"}
-                placeholder={"doe@gmail.com"}
-                label={"Email"}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                icon={faEnvelope}
-              />
-            </div>
-            <div className="w-1/2 pr-4">
-              <CustomInput
-                width={"w-full"}
-                placeholder={"0555555599"}
-                label={"Phone"}
-                value={phone_number}
-                onChange={(e) => setPhone(e.target.value)}
-                icon={faPhone}
-              />
-            </div>
-          </div>
-
-          {/* Password & Confirm Password */}
-          <div className="flex w-full gap-4">
-            <div className="w-1/2">
-              <CustomInput
-                width={"w-full"}
-                type={"password"}
-                placeholder={"**********"}
-                label={"Password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                icon={faLock}
-              />
-            </div>
-            <div className="w-1/2 pr-4">
-              <CustomInput
-                width={"w-full"}
-                type={"password"}
-                placeholder={"**********"}
-                label={"Confirm Password"}
-                value={confirm_password}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                icon={faLock}
-              />
-            </div>
-          </div>
-
-          <CustomButton
-            title="Register"
-            onPress={() => {
-              // handle_Submit();
-              navigate("/home");
-            }}
-            className="w-full h-8 py-1 my-4 text-sm rounded-sm text-semibold"
-          />
-
-          <p className="text-xs font-normal text-slate-500">
-            Already have an account?{" "}
-            <a
-              href="/signIn"
-              className="font-semibold text-amber-400 hover:underline"
-            >
-              Login
-            </a>
-          </p>
         </div>
-      </div>
+      </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
 };
 
-export default SignUp;
+export default Register;
